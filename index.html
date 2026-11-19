@@ -2,97 +2,29 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Super Mario Land 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tetris</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       background-color: #000000;
       width: 100vw;
-      height: 100dvh;
+      height: 100vh;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
     }
-
-    /* Pantalla de inicio centrada con colores clásicos de Game Boy */
-    #start-overlay {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100dvh;
-      background-color: #c4c1b8; /* Gris carcasa Game Boy */
-      border: 8px solid #8c8980;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .gb-screen-box {
-      background-color: #8b956d; /* Verde pantalla Game Boy */
-      border: 6px solid #595d6e;
-      border-radius: 10px 10px 35px 10px;
-      padding: 24px 28px;
-      margin-bottom: 30px;
-      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.35);
-      max-width: 340px;
-      width: 100%;
-    }
-
-    .gb-screen-box h1 {
-      font-size: 20px;
-      color: #1f2611;
-      letter-spacing: 1.5px;
-      margin-bottom: 6px;
-      font-weight: 900;
-    }
-
-    .gb-screen-box p {
-      font-size: 12px;
-      color: #2c3519;
-      font-weight: bold;
-    }
-
-    /* Botón START GAME centrado y con color magenta clásico */
-    #btn-start {
-      padding: 18px 42px;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      background-color: #8b1d41; /* Magenta clásico botones A/B */
-      color: #f4f1ea;
-      border: 4px solid #5c1029;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #420b1d, 0 10px 20px rgba(0, 0, 0, 0.35);
-      transition: transform 0.08s ease, box-shadow 0.08s ease;
-    }
-
-    #btn-start:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #420b1d;
-      background-color: #701533;
-    }
-
-    /* Tu contenedor original del emulador sin cambios */
     #game-container {
       width: 100vw;
       height: 100dvh;
       max-width: 600px;
-      position: relative;
+      position: relative
     }
-
     #game {
       width: 100%;
       height: 100%;
@@ -101,51 +33,30 @@
 </head>
 <body>
 
-  <!-- Pantalla de START GAME con estilo Game Boy -->
-  <div id="start-overlay">
-    <div class="gb-screen-box">
-      <h1>GAME BOY</h1>
-      <p>DOT MATRIX WITH STEREO SOUND</p>
-    </div>
-    <button id="btn-start">START GAME</button>
-  </div>
-
-  <!-- Contenedor donde se dibuja el emulador (tal como estaba) -->
+  <!-- Contenedor donde se dibuja el emulador -->
   <div id="game-container">
     <div id="game"></div>
   </div>
 
-  <!-- Configuración original de EmulatorJS -->
+  <!-- Configuración de EmulatorJS -->
   <script>
     // 1. Dónde se montará el juego
     EJS_player = '#game';
 
     // 2. Consola que emula:
-    EJS_core = 'gb';
+    // Usa 'nes' para Nintendo NES o 'gb' para Game Boy clásica
+    EJS_core = 'gb'; 
 
     // 3. Nombre EXACTO del archivo ROM que subiste a GitHub
-    EJS_gameUrl = 'AdventureIsland.gb';
+    EJS_gameUrl = 'AdventureIsland.gb'; 
 
     // 4. Servidor que carga el motor del emulador
-    EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
+    EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
 
-    // Al pulsar START GAME se quita la portada y activa el audio
-    document.getElementById('btn-start').addEventListener('click', function () {
-      document.getElementById('start-overlay').style.display = 'none';
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          const audioCtx = new AudioContext();
-          if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
-        }
-      } catch (e) {}
-    });
   </script>
 
-  <!-- Script que arranca el emulador (tal como estaba) -->
-  <script src="https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]"></script>
+  <!-- Script que arranca el emulador -->
+  <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 
 </body>
 </html>
