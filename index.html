@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Evita el zoom al tocar dos botones rápido en iPhone y Android -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PRIS 3D presenta Nintendo</title>
+    <title>Pris 3D presenta Game Boy NFC</title>
     <style>
         * {
             box-sizing: border-box;
@@ -31,7 +31,7 @@
             inset: 0;
             width: 100%;
             height: 100dvh;
-            background: radial-gradient(circle, #222222 0%, #0a0a0a 100%);
+            background: radial-gradient(circle, #2a1b3d 0%, #0a0a0a 100%);
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -46,7 +46,7 @@
             font-size: 24px;
             margin-bottom: 10px;
             letter-spacing: 1px;
-            color: #e60012; /* Rojo clásico de Nintendo */
+            color: #9b4dca; /* Morado clásico de Game Boy Color */
         }
 
         #start-overlay p {
@@ -60,18 +60,18 @@
             font-size: 20px;
             font-weight: bold;
             letter-spacing: 1px;
-            background-color: #e60012;
+            background-color: #7b2cbf;
             color: #ffffff;
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(230, 0, 18, 0.4);
+            box-shadow: 0 6px 20px rgba(123, 44, 191, 0.45);
             transition: transform 0.1s ease, background-color 0.2s ease;
         }
 
         #btn-start:active {
             transform: scale(0.95);
-            background-color: #b8000e;
+            background-color: #5a189a;
         }
 
         /* Contenedor del emulador a pantalla completa */
@@ -93,7 +93,7 @@
 
     <!-- Pantalla inicial obligatoria para iOS -->
     <div id="start-overlay">
-        <h1>PRIS 3D NINTENDO</h1>
+        <h1>PRIS 3D GAME BOY</h1>
         <p>Presiona el botón para iniciar la consola</p>
         <button id="btn-start">START GAME</button>
     </div>
@@ -126,17 +126,17 @@
                 console.log("Audio iniciado");
             }
 
-            // 3. Configurar el emulador (EmulatorJS)
+            // 3. Configurar el emulador (EmulatorJS) para Game Boy / Game Boy Color
             window.EJS_player = '#game';
             
-            // CONSOLA: Usa 'nes' para Nintendo (NES), 'snes' para Super Nintendo, 'gb' para Game Boy, 'gba' para Game Boy Advance
+            // NÚCLEO: 'gb' carga el core Gambatte, que ejecuta tanto .gbc como .gb a todo color
             window.EJS_core = 'gb'; 
             
-            // RUTA DE TU JUEGO: Asegúrate de que coincida exactamente con el nombre de tu archivo en GitHub (sin barra inicial)
-            window.EJS_gameUrl = 'AdventuraIsland.gb'; 
+            // RUTA DE TU JUEGO: Coincide con la carpeta roms y el archivo .gbc en minúsculas (sin barra inicial)
+            window.EJS_gameUrl = 'AdventureIsland.gb'; 
             
             // Ruta de los archivos del motor (CDN oficial estable)
-            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
             
             // Opciones ideales para móvil
             window.EJS_startOnLoaded = true;
@@ -161,9 +161,10 @@
 
             // 4. Cargar el script del emulador dinámicamente tras el toque del usuario
             const script = document.createElement('script');
-            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]';
             document.body.appendChild(script);
         });
     </script>
 </body>
 </html>
+
