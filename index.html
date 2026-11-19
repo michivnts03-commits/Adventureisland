@@ -1,164 +1,250 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <!-- Evita el zoom al tocar dos botones rápido en iPhone y Android -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Pris 3D presenta Game Boy NFC</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            /* Bloquea gestos del navegador y permite presionar múltiples teclas a la vez */
-            touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PRIS 3D presenta GAME BOY NFC</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      /* Permite multitecla sin zoom ni desplazamientos en iOS y Android */
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
-        html, body {
-            width: 100%;
-            height: 100dvh;
-            background-color: #000000;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        }
+    body {
+      background-color: #000000;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    }
 
-        /* Pantalla de inicio centrada para desbloquear audio en iOS/Safari */
-        #start-overlay {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100dvh;
-            background: radial-gradient(circle, #2a1b3d 0%, #0a0a0a 100%);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
-            text-align: center;
-        }
+    /* Pantalla de inicio centrada con estética clásica de Game Boy */
+    #start-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      background-color: #c4c1b8; /* Gris clásico de Game Boy */
+      border: 8px solid #8c8980;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+      text-align: center;
+    }
 
-        #start-overlay h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-            color: #9b4dca; /* Morado clásico de Game Boy Color */
-        }
+    .gb-screen-box {
+      background-color: #8b956d; /* Verde pantalla Game Boy */
+      border: 6px solid #595d6e;
+      border-radius: 10px 10px 35px 10px;
+      padding: 24px 28px;
+      margin-bottom: 30px;
+      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.35);
+      max-width: 340px;
+      width: 100%;
+    }
 
-        #start-overlay p {
-            font-size: 14px;
-            color: #aaaaaa;
-            margin-bottom: 30px;
-        }
+    .gb-screen-box h1 {
+      font-size: 20px;
+      color: #1f2611;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+      font-weight: 900;
+    }
 
-        #btn-start {
-            padding: 18px 40px;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            background-color: #7b2cbf;
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(123, 44, 191, 0.45);
-            transition: transform 0.1s ease, background-color 0.2s ease;
-        }
+    .gb-screen-box p {
+      font-size: 12px;
+      color: #2c3519;
+      font-weight: bold;
+    }
 
-        #btn-start:active {
-            transform: scale(0.95);
-            background-color: #5a189a;
-        }
+    /* Botón START GAME centrado y con color magenta clásico */
+    #btn-start {
+      padding: 18px 42px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background-color: #8b1d41; /* Magenta clásico botones A/B */
+      color: #f4f1ea;
+      border: 4px solid #5c1029;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #420b1d, 0 10px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
 
-        /* Contenedor del emulador a pantalla completa */
-        #game-wrapper {
-            width: 100%;
-            height: 100dvh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    #btn-start:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #420b1d, 0 4px 10px rgba(0, 0, 0, 0.35);
+      background-color: #701533;
+    }
 
-        #game {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    /* Botones de velocidad en español (Lento / Normal / Rápido) */
+    #speed-controls {
+      display: none;
+      position: fixed;
+      top: env(safe-area-inset-top, 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5000;
+      gap: 8px;
+      background: rgba(20, 20, 20, 0.85);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid #444;
+    }
+
+    .speed-btn {
+      background-color: #49475b;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .speed-btn.active {
+      background-color: #8b1d41;
+    }
+
+    /* Contenedor donde se dibuja el emulador */
+    #game-container {
+      width: 100vw;
+      height: 100dvh;
+      max-width: 600px;
+      position: relative;
+    }
+
+    #game {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Pantalla inicial obligatoria para iOS -->
-    <div id="start-overlay">
-        <h1>PRIS 3D GAME BOY</h1>
-        <p>Presiona el botón para iniciar la consola</p>
-        <button id="btn-start">START GAME</button>
+  <!-- Pantalla inicial centrada (necesaria para desbloquear audio en iOS) -->
+  <div id="start-overlay">
+    <div class="gb-screen-box">
+      <h1>PRIS 3D GAME BOY</h1>
+      <p>GAME BOY • STEREO SOUND</p>
     </div>
+    <button id="btn-start">START GAME</button>
+  </div>
 
-    <!-- Contenedor donde se cargará el emulador -->
-    <div id="game-wrapper">
-        <div id="game"></div>
-    </div>
+  <!-- Controles de velocidad en español -->
+  <div id="speed-controls">
+    <button class="speed-btn" id="btn-slow">LENTO</button>
+    <button class="speed-btn active" id="btn-normal">NORMAL</button>
+    <button class="speed-btn" id="btn-fast">RÁPIDO</button>
+  </div>
 
-    <script>
-        // Bloquea el gesto de "pellizcar para hacer zoom" en iOS Safari al usar 2 dedos
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
+  <!-- Contenedor donde se dibuja el emulador -->
+  <div id="game-container">
+    <div id="game"></div>
+  </div>
 
-        document.getElementById('btn-start').addEventListener('click', function () {
-            // 1. Ocultar la pantalla de inicio
-            document.getElementById('start-overlay').style.display = 'none';
+  <!-- Configuración de EmulatorJS -->
+  <script>
+    // Evita zoom al pellizcar o usar dos dedos en iOS Safari
+    document.addEventListener('gesturestart', function (e) {
+      e.preventDefault();
+    });
 
-            // 2. Desbloquear el sistema de audio en iPhone (Safari)
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (AudioContext) {
-                    const audioCtx = new AudioContext();
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                }
-            } catch (e) {
-                console.log("Audio iniciado");
-            }
+    // Funciones para los botones LENTO / NORMAL / RÁPIDO
+    function setGameSpeed(mode, activeBtnId) {
+      document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(activeBtnId).classList.add('active');
 
-            // 3. Configurar el emulador (EmulatorJS) para Game Boy / Game Boy Color
-            window.EJS_player = '#game';
-            
-            // NÚCLEO: 'gb' carga el core Gambatte, que ejecuta tanto .gbc como .gb a todo color
-            window.EJS_core = 'gbc'; 
-            
-            // RUTA DE TU JUEGO: Coincide con la carpeta roms y el archivo .gbc en minúsculas (sin barra inicial)
-            window.EJS_gameUrl = 'AdventureIsland.gb'; 
-            
-            // Ruta de los archivos del motor (CDN oficial estable)
-            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
-            
-            // Opciones ideales para móvil
-            window.EJS_startOnLoaded = true;
-            window.EJS_language = 'es-ES';
-            window.EJS_Buttons = {
-                playPause: true,
-                restart: true,
-                mute: true,
-                settings: false,
-                fullscreen: false, // Evita conflictos con el viewport de iOS
-                saveState: true,
-                loadState: true,
-                screenRecord: false,
-                gamepad: true,
-                cheat: false,
-                volume: true,
-                quickSave: false,
-                quickLoad: false,
-                screenshot: false,
-                cacheManager: false
-            };
+      if (window.EJS_emulator && window.EJS_emulator.gameManager) {
+        if (mode === 'fast') {
+          window.EJS_emulator.gameManager.toggleFastForward(true);
+          window.EJS_emulator.gameManager.toggleSlowMotion(false);
+        } else if (mode === 'slow') {
+          window.EJS_emulator.gameManager.toggleFastForward(false);
+          window.EJS_emulator.gameManager.toggleSlowMotion(true);
+        } else {
+          window.EJS_emulator.gameManager.toggleFastForward(false);
+          window.EJS_emulator.gameManager.toggleSlowMotion(false);
+        }
+      }
+    }
 
+    document.getElementById('btn-slow').addEventListener('click', () => setGameSpeed('slow', 'btn-slow'));
+    document.getElementById('btn-normal').addEventListener('click', () => setGameSpeed('normal', 'btn-normal'));
+    document.getElementById('btn-fast').addEventListener('click', () => setGameSpeed('fast', 'btn-fast'));
+
+    // Arranque al pulsar START GAME (compatibilidad total iPhone y Android)
+    document.getElementById('btn-start').addEventListener('click', function () {
+      document.getElementById('start-overlay').style.display = 'none';
+      document.getElementById('speed-controls').style.display = 'flex';
+
+      // Desbloquea el audio en Safari (iOS)
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          const audioCtx = new AudioContext();
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+        }
+      } catch (e) {}
+
+      // 1. Dónde se montará el juego
+      window.EJS_player = '#game';
+
+      // 2. Consola que emula
+      window.EJS_core = 'gb';
+
+      // 3. Nombre EXACTO de tu archivo ROM en GitHub
+      window.EJS_gameUrl = 'AdventureIsland.gb';
+
+      // 4. Servidor que carga el motor del emulador
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
+
+      // 5. Idioma en español y arranque directo tras pulsar START GAME
+      window.EJS_language = 'es-ES';
+      window.EJS_startOnLoaded = true;
+      window.EJS_Buttons = {
+        playPause: true,
+        restart: true,
+        mute: true,
+        settings: false,
+        fullscreen: false,
+        saveState: true,
+        loadState: true,
+        screenRecord: false,
+        gamepad: true,
+        cheat: false,
+        volume: true,
+        quickSave: false,
+        quickLoad: false,
+        screenshot: false,
+        cacheManager: false
+      };
+
+      // Script que arranca el emulador
+      const script = document.createElement('script');
+      script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]';
+      document.body.appendChild(script);
+    });
+  </script>
+
+</body>
+</html>
             // 4. Cargar el script del emulador dinámicamente tras el toque del usuario
             const script = document.createElement('script');
             script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]';
