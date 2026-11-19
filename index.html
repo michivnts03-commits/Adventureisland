@@ -2,17 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Adventure Island - Game Boy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Super Mario Land 2</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      touch-action: none;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
     body {
@@ -26,13 +22,13 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
     }
 
-    /* Pantalla de inicio clásica de Game Boy */
+    /* Pantalla de inicio centrada con colores clásicos de Game Boy */
     #start-overlay {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100dvh;
-      background-color: #c4c1b8;
+      background-color: #c4c1b8; /* Gris carcasa Game Boy */
       border: 8px solid #8c8980;
       display: flex;
       flex-direction: column;
@@ -44,7 +40,7 @@
     }
 
     .gb-screen-box {
-      background-color: #8b956d;
+      background-color: #8b956d; /* Verde pantalla Game Boy */
       border: 6px solid #595d6e;
       border-radius: 10px 10px 35px 10px;
       padding: 24px 28px;
@@ -68,18 +64,19 @@
       font-weight: bold;
     }
 
-    /* Botón START GAME centrado con color magenta clásico */
+    /* Botón START GAME centrado y con color magenta clásico */
     #btn-start {
       padding: 18px 42px;
       font-size: 20px;
       font-weight: 900;
       letter-spacing: 2px;
-      background-color: #8b1d41;
+      background-color: #8b1d41; /* Magenta clásico botones A/B */
       color: #f4f1ea;
       border: 4px solid #5c1029;
       border-radius: 50px;
       cursor: pointer;
       box-shadow: 0 6px 0 #420b1d, 0 10px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
     }
 
     #btn-start:active {
@@ -88,36 +85,7 @@
       background-color: #701533;
     }
 
-    /* Botones de velocidad en español */
-    #speed-controls {
-      display: none;
-      position: fixed;
-      top: env(safe-area-inset-top, 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5000;
-      gap: 8px;
-      background: rgba(20, 20, 20, 0.85);
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #444;
-    }
-
-    .speed-btn {
-      background-color: #49475b;
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .speed-btn.active {
-      background-color: #8b1d41;
-    }
-
+    /* Tu contenedor original del emulador sin cambios */
     #game-container {
       width: 100vw;
       height: 100dvh;
@@ -133,87 +101,37 @@
 </head>
 <body>
 
-  <!-- Pantalla inicial centrada -->
+  <!-- Pantalla de START GAME con estilo Game Boy -->
   <div id="start-overlay">
     <div class="gb-screen-box">
-      <h1>ADVENTURE ISLAND</h1>
-      <p>GAME BOY • STEREO SOUND</p>
+      <h1>GAME BOY</h1>
+      <p>DOT MATRIX WITH STEREO SOUND</p>
     </div>
     <button id="btn-start">START GAME</button>
   </div>
 
-  <!-- Controles de velocidad en español -->
-  <div id="speed-controls">
-    <button class="speed-btn" id="btn-slow">LENTO</button>
-    <button class="speed-btn active" id="btn-normal">NORMAL</button>
-    <button class="speed-btn" id="btn-fast">RÁPIDO</button>
-  </div>
-
-  <!-- Contenedor del emulador -->
+  <!-- Contenedor donde se dibuja el emulador (tal como estaba) -->
   <div id="game-container">
     <div id="game"></div>
   </div>
 
-  <!-- Configuración directa de EmulatorJS -->
+  <!-- Configuración original de EmulatorJS -->
   <script>
+    // 1. Dónde se montará el juego
     EJS_player = '#game';
+
+    // 2. Consola que emula:
     EJS_core = 'gb';
-    EJS_gameUrl = 'AdventureIsland.gb [adventureisland.gb]';
+
+    // 3. Nombre EXACTO del archivo ROM que subiste a GitHub
+    EJS_gameUrl = 'AdventureIsland.gb';
+
+    // 4. Servidor que carga el motor del emulador
     EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
-    EJS_language = 'es-ES';
-    EJS_startOnLoaded = true;
-    EJS_Buttons = {
-      playPause: true,
-      restart: true,
-      mute: true,
-      settings: false,
-      fullscreen: false,
-      saveState: true,
-      loadState: true,
-      screenRecord: false,
-      gamepad: true,
-      cheat: false,
-      volume: true,
-      quickSave: false,
-      quickLoad: false,
-      screenshot: false,
-      cacheManager: false
-    };
-  </script>
-  <script src="https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]"></script>
 
-  <script>
-    document.addEventListener('gesturestart', function (e) {
-      e.preventDefault();
-    });
-
-    function setGameSpeed(mode, activeBtnId) {
-      document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(activeBtnId).classList.add('active');
-
-      if (window.EJS_emulator && window.EJS_emulator.gameManager) {
-        if (mode === 'fast') {
-          window.EJS_emulator.gameManager.toggleFastForward(true);
-          window.EJS_emulator.gameManager.toggleSlowMotion(false);
-        } else if (mode === 'slow') {
-          window.EJS_emulator.gameManager.toggleFastForward(false);
-          window.EJS_emulator.gameManager.toggleSlowMotion(true);
-        } else {
-          window.EJS_emulator.gameManager.toggleFastForward(false);
-          window.EJS_emulator.gameManager.toggleSlowMotion(false);
-        }
-      }
-    }
-
-    document.getElementById('btn-slow').addEventListener('click', () => setGameSpeed('slow', 'btn-slow'));
-    document.getElementById('btn-normal').addEventListener('click', () => setGameSpeed('normal', 'btn-normal'));
-    document.getElementById('btn-fast').addEventListener('click', () => setGameSpeed('fast', 'btn-fast'));
-
+    // Al pulsar START GAME se quita la portada y activa el audio
     document.getElementById('btn-start').addEventListener('click', function () {
       document.getElementById('start-overlay').style.display = 'none';
-      document.getElementById('speed-controls').style.display = 'flex';
-
-      // Desbloquea el audio en Safari (iOS) y reanuda el emulador si estaba pausado
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (AudioContext) {
@@ -222,14 +140,12 @@
             audioCtx.resume();
           }
         }
-        if (window.EJS_emulator && window.EJS_emulator.play [window.ejs_emulator.play]) {
-          window.EJS_emulator.play [window.ejs_emulator.play]();
-        }
       } catch (e) {}
     });
   </script>
 
+  <!-- Script que arranca el emulador (tal como estaba) -->
+  <script src="https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]"></script>
+
 </body>
 </html>
-
-
