@@ -2,26 +2,23 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Super Mario Land 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIS 3D presenta GAME BOY NFC</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       background-color: #000000;
       width: 100vw;
-      height: 100dvh;
+      height: 100vh;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     }
-
     /* Pantalla inicial idéntica a la imagen */
     #start-overlay {
       position: fixed;
@@ -71,15 +68,14 @@
       transform: scale(0.95);
       background-color: #5a189a;
     }
-
-    /* Contenedor del emulador sin cambios */
+ 
+    
     #game-container {
       width: 100vw;
       height: 100dvh;
       max-width: 600px;
-      position: relative;
+      position: relative
     }
-
     #game {
       width: 100%;
       height: 100%;
@@ -88,50 +84,51 @@
 </head>
 <body>
 
-  <!-- Pantalla de inicio -->
+    <!-- Pantalla de inicio -->
   <div id="start-overlay">
     <h1>GAME BOY COLOR</h1>
     <p>Presiona el botón para iniciar la consola</p>
     <button id="btn-start">START GAME</button>
   </div>
 
-  <!-- Contenedor donde se dibuja el emulador (tal como estaba) -->
+  
+  
+  <!-- Contenedor donde se dibuja el emulador -->
   <div id="game-container">
     <div id="game"></div>
   </div>
 
-  <!-- Configuración original de EmulatorJS -->
+  <!-- Configuración de EmulatorJS -->
   <script>
+document.getElementById('btn-start').addEventListener('click', function (){
+    // 1. Quita la pantalla inicial
+document.getElementById('start-screen').style.display = 'none';
+
+   // 2. Activa el audio en Iphone
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (AudioCtx) new AudioCtx().resume();
+  
     // 1. Dónde se montará el juego
     EJS_player = '#game';
 
     // 2. Consola que emula:
-    EJS_core = 'gb';
+    // Usa 'nes' para Nintendo NES o 'gb' para Game Boy clásica
+    EJS_core = 'gb'; 
 
     // 3. Nombre EXACTO del archivo ROM que subiste a GitHub
-    EJS_gameUrl = 'AdventureIsland.gb';
+    EJS_gameUrl = 'AdventureIsland.gb'; 
 
     // 4. Servidor que carga el motor del emulador
-    EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/ [cdn.emulatorjs.org]';
+    EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
 
-    // Al pulsar START GAME se oculta la portada y se activa el audio
-    document.getElementById('btn-start').addEventListener('click', function () {
-      document.getElementById('start-overlay').style.display = 'none';
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          const audioCtx = new AudioContext();
-          if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
-        }
-      } catch (e) {}
-    });
-  </script>
+  EJS_language = 'es-ES';
+    EJS_startOnLoaded = true;
+  const script = document.createElement('script');
+script.src='https://cdn.emulatorjs.org/stable/data/loader.js';
+    document.body.appendChild(script);
+  });
+    </script>
 
-  <!-- Script que arranca el emulador (tal como estaba) -->
-  <script src="https://cdn.emulatorjs.org/stable/data/loader.js [cdn.emulatorjs.org]"></script>
 
 </body>
 </html>
-
